@@ -1,13 +1,16 @@
 package com.stilbruch.mslscraper
 
+import com.stilbruch.mslscraper.Scraper.Server
 import me.tongfei.progressbar.{ProgressBar, ProgressBarStyle}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
+import scala.collection.mutable
+
 class WebsiteScraper(maxIndex: Int, urlGen: (Int => String), pageParser: (Document => Set[Server])) {
 
   var index = 0
-  var servers: Set[Server] = Set()
+  val servers = mutable.Set.empty[Server]
   val progressBar: ProgressBar = new ProgressBar("Downloading", maxIndex, 500, System.out, ProgressBarStyle.ASCII)
 
   def getIndex = synchronized {
@@ -18,7 +21,7 @@ class WebsiteScraper(maxIndex: Int, urlGen: (Int => String), pageParser: (Docume
 
   def start(numThreads: Int,
             perServer: (Server => Unit) = (server => Unit),
-            onComplete: (Set[Server] => Unit) = (servers => Unit)): Unit = {
+            onComplete: (mutable.Set[Server] => Unit) = (servers => Unit)): Unit = {
 
     progressBar.start()
 
