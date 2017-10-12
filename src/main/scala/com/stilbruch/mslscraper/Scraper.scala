@@ -26,7 +26,7 @@ object Scraper {
 
             val ip = cols.get(2).text().replace(" copy copied", "").split(":")
 
-            val server = new Server(
+            val server = Server(
               cols.get(1).text(),
               ip(0),
               if (ip.length == 2) ip(1).toInt else 0,
@@ -74,11 +74,11 @@ object Scraper {
       val csvFile = new File("servers.csv")
       if (!csvFile.exists()) csvFile.createNewFile()
 
-      val writer = new FileWriter(csvFile);
+      val writer = new FileWriter(csvFile)
 
       writer.append("name,ip,port,players,online\n")
 
-      scraperMap.get(choice).get.start(16,
+      scraperMap(choice).start(16,
         onComplete = servers => {
           servers.foreach(server => {
             writer.append(s"${server.name},${server.ip},${server.port},${server.players},${server.online}\n")
